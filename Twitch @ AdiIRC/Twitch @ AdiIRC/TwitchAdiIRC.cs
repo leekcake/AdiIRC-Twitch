@@ -20,10 +20,10 @@ namespace Twitch___AdiIRC
     {
         //Mandatory information fields.
         public string PluginDescription => "Provides simple additional features like emotes for twitch chat integration.";
-        public string PluginAuthor => "Xesyto";
+        public string PluginAuthor => "Xesyto | Edited by leekcake";
         public string PluginName => "Twitch @ AdiIRC";
-        public string PluginVersion => "6";
-        public string PluginEmail => "s.oudenaarden@gmail.com";
+        public string PluginVersion => "7";
+        public string PluginEmail => "s.oudenaarden@gmail.com | leekcake@protonmail.com";
 
         private IPluginHost _host;
         
