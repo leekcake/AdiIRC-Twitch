@@ -177,10 +177,10 @@ namespace Twitch___AdiIRC
                 //Parse message into a TwitchMessage
                 var twitchMessage = new TwitchIrcMessage(rawMessage);
 
-                //Check if there are badges, if so, insert them into event.
-                if (twitchMessage.HasBadges)
-                {                    
-                    var newName = twitchMessage.BadgeList + twitchMessage.UserName;
+                //Check if there are badges or user has custom displayName, if so, insert them into event.
+                if (twitchMessage.NeedtoEditMessage)
+                {           
+                    var newName = twitchMessage.BadgeList + twitchMessage.UserDisplayName;
                     argument.Data = rawMessage.Replace($":{twitchMessage.UserName}!", $":{newName}!");
                 }
             }

@@ -10,12 +10,26 @@ namespace Twitch___AdiIRC
         public string Message;
         public string Channel;
         public string UserName;
+        private string userDisplayName;
+        public string UserDisplayName {
+            get {
+                if (userDisplayName != null) return userDisplayName + "(" + UserName + ")";
+                return UserName;
+            }
+        }
+
         public string UserMask;
         public string BadgeList;
         public bool HasEmotes;
         public bool HasBadges;
         public Dictionary<string, string> Tags;
         public List<TwitchEmote> Emotes;
+
+        public bool NeedtoEditMessage {
+            get {
+                return HasEmotes || userDisplayName != null;
+            }
+        }
 
         private static readonly string _emoteRegex = @"((\d+):(\d+)-(\d+))";
         private static readonly string _messageRegex = @"@(.+?) :((.+)!.+?) PRIVMSG (#.+?) :(.+)";        
@@ -27,6 +41,11 @@ namespace Twitch___AdiIRC
             Tags = (Dictionary<string,string>) argument.MessageTags;
             UserMask = argument.User.Host;
             UserName = argument.User.Nick;
+
+            if(Tags.ContainsKey("display-name"))
+            {
+                userDisplayName = Tags["display-name"];
+            }
 
             //Parse the Tags for emotes
             //I'm being lazy on int.parse security so i'm throwing in a
@@ -63,6 +82,11 @@ namespace Twitch___AdiIRC
 
             //Tags
             Tags = TwitchRawEventHandlers.ParseTagsFromString(message);
+
+            if (Tags.ContainsKey("display-name"))
+            {
+                userDisplayName = Tags["display-name"];
+            }
 
             //Parse the Tags for emotes
             //I'm being lazy on int.parse security so i'm throwing in a
