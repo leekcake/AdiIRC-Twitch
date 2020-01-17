@@ -5,7 +5,7 @@ namespace Twitch___AdiIRC
 {
     public class TwitchEmote
     {
-        public int Id;
+        public string Id;
         public string Name;
         public string URL => $"http://static-cdn.jtvnw.net/emoticons/v1/{Id}/1.0";
 

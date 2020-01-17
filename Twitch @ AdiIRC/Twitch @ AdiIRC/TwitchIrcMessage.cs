@@ -180,7 +180,7 @@ namespace Twitch___AdiIRC
             //So we substring the actual name of the mote out of the message.
             foreach (Match match in emoteMatches)
             {
-                var emoteId = int.Parse(match.Groups[2].ToString());
+                var emoteId = match.Groups[2].ToString();
                 var startIndex = int.Parse(match.Groups[3].ToString());
                 var endIndex = int.Parse(match.Groups[4].ToString());
 
