@@ -140,6 +140,11 @@ namespace Twitch___AdiIRC
                 badgeList += "🗡️";
             }
 
+            if(badges.Contains("vip/"))
+            {
+                badgeList += "💎";
+            }
+
             if (badges.Contains("subscriber/"))
             {
                 badgeList += "⭐";
