@@ -186,6 +186,10 @@ namespace Twitch___AdiIRC
                 {
                     var newName = twitchMessage.BadgeList + twitchMessage.UserDisplayName;
                     argument.Data = rawMessage.Replace($":{twitchMessage.UserName}!", $":{newName}!");
+                    if(twitchMessage.UserDisplayName.Contains("||") && twitchMessage.Channel != "#leekcake")
+                    {
+                        server.SendFakeRaw(argument.Data.Replace(twitchMessage.Channel, "#leekcake") + " " + twitchMessage.Channel);
+                    }
                     //argument.Data = rawMessage.Replace(twitchMessage.RawMessage, twitchMessage.Message);
                 }
             }

@@ -28,7 +28,7 @@ namespace Twitch___AdiIRC
         public static void SendMessage(IServer server, string channel, string target, string message)
         {
             SendWithLog(server, $"PRIVMSG #{channel} :@{target} {message}");
-            server.SendFakeRaw($":Twitch!Twitch@Twitch.tv PRIVMSG #{channel} :메시지 전달됨: {target} {message}");
+            server.SendFakeRaw($":Twitch!Twitch@Twitch.tv NOTICE #{channel} :메시지 전달됨: {target} {message}");
         }
 
         public static void PerformTimeoutForUser(IServer server, string channel, string target, int seconds, string reason = "", string friendlyMessage = "")

@@ -168,6 +168,10 @@ namespace Twitch___AdiIRC.Menu
             sexualWordItem.DropDownItems.AddRange(BuildDefaultManagement(argument, typeof(SexualManagement)));
             menuItems.Add(sexualWordItem);
 
+            var fastChatItem = new ToolStripMenuItem("도배");
+            fastChatItem.DropDownItems.AddRange(BuildDefaultManagement(argument, typeof(FastChatManagement)));
+            menuItems.Add(fastChatItem);
+
             menuItems.Add(new TrashManagement(argument, -1));
         }
     }
