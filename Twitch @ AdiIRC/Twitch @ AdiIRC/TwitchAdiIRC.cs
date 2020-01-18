@@ -181,9 +181,10 @@ namespace Twitch___AdiIRC
 
                 //Check if there are badges or user has custom displayName, if so, insert them into event.
                 if (twitchMessage.NeedtoEditMessage)
-                {           
+                {
                     var newName = twitchMessage.BadgeList + twitchMessage.UserDisplayName;
-                    argument.Data = rawMessage.Replace(twitchMessage.Message, $"{newName}: {twitchMessage.Message}");
+                    argument.Data = rawMessage.Replace($":{twitchMessage.UserName}!", $":{newName}!");
+                    //argument.Data = rawMessage.Replace(twitchMessage.RawMessage, twitchMessage.Message);
                 }
             }
 

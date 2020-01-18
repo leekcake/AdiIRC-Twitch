@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using AdiIRCAPIv2.Arguments.ChannelMessages;
@@ -31,13 +32,14 @@ namespace Twitch___AdiIRC
             {
                 if(Encounter < 10 && FollowDay < 7)
                 {
-                    if (FollowDay == -1) return "#XX";
-                    return "#" + FollowDay;
+                    //Need to add Zero width joiner(‍) for easy highlight
+                    if (FollowDay == -1) return "‍X";
+                    return "‍" + FollowDay + "일";
                 }
                 else
                 {
-                    if (FollowDay == -1) return "XX";
-                    return FollowDay + "";
+                    if (FollowDay == -1) return "X";
+                    return FollowDay + "일";
                 }
             }
         }
@@ -61,32 +63,44 @@ namespace Twitch___AdiIRC
             return follow;
         }
 
-        public string Message;
+        public string RawMessage;
+        public string Message {
+            get {
+                return Message;//$"{BadgeList + UserDisplayName}: {RawMessage}";
+            }
+        }
         public string Channel;
         public string UserName;
         public string userDisplayName;
         public string UserDisplayName {
             get {
                 StringBuilder result = new StringBuilder();
-                if (userDisplayName != null) result.Append(userDisplayName);
-
-                if( DisplayFollowLong)
+                if (userDisplayName != null)
                 {
+                    result.Append(userDisplayName);
+                }
+                if (DisplayFollowLong)
+                {
+                    result.Append("|");
                     //#e_yeon -> e_yeon
                     var channelName = Channel.Substring(1);
                     if (channelName != UserName)
                     {
-                        if(UserName == "bbangddeock" || UserName == "leekcake_bot"
+                        if (UserName == "bbangddeock" || UserName == "leekcake_bot"
                             || UserName == "nightbot" || UserName == "ssakdook")
                         {
                             return $"{userDisplayName}#Bot";
                         }
                         var follow = GetFollowData(channelName, UserName);
                         follow.NewEncount();
-                        result.Append("#");
+                        result.Append("(");
                         result.Append(follow.Display());
+                        result.Append(")");
                     }
                 }
+
+                result.Append("#");
+                result.Append(UserName);
 
                 return result.ToString();
             }
@@ -114,7 +128,7 @@ namespace Twitch___AdiIRC
         {
             Channel = argument.Channel.Name;
             //Assign information we care about to fields.
-            Message = argument.Message;
+            RawMessage = argument.Message;
             Tags = (Dictionary<string,string>) argument.MessageTags;
             UserMask = argument.User.Host;
             UserName = argument.User.Nick;
@@ -155,7 +169,7 @@ namespace Twitch___AdiIRC
             UserMask = messageMatch.Groups[2].ToString();
             UserName = messageMatch.Groups[3].ToString();
             Channel = messageMatch.Groups[4].ToString();
-            Message = messageMatch.Groups[5].ToString();
+            RawMessage = messageMatch.Groups[5].ToString();
 
             //Tags
             Tags = TwitchRawEventHandlers.ParseTagsFromString(message);
@@ -266,7 +280,8 @@ namespace Twitch___AdiIRC
                 var startIndex = int.Parse(match.Groups[3].ToString());
                 var endIndex = int.Parse(match.Groups[4].ToString());
 
-                var emoteName = Message.Substring(startIndex, endIndex - startIndex + 1);
+                var emoteName = RawMessage.Substring(startIndex, endIndex - startIndex + 1);
+                File.AppendAllText(TwitchApiTools.logPath, $"{match.Value} <-> Extracting({startIndex}, {endIndex}): {emoteName}\r\n");
 
                 var emote = new TwitchEmote { Id = emoteId, Name = emoteName };
 
