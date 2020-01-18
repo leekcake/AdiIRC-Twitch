@@ -1,6 +1,6 @@
 ﻿namespace Twitch___AdiIRC.TwitchApi
 {
-    class TwitchChannel
+    public class TwitchChannel
     {
         public object mature;
         public string status;

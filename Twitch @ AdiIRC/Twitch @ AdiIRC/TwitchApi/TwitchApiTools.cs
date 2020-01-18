@@ -76,6 +76,43 @@ namespace Twitch___AdiIRC.TwitchApi
             return userIds;
         }
 
+        public static TwitchChannel GetTwitchChannel(string id)
+        {
+            return GetTwitchChannel(new List<string> { id }).FirstOrDefault().Value;
+        }
+
+        public static Dictionary<string, TwitchChannel> GetTwitchChannel(IEnumerable<string> channelIds)
+        {
+            var channels = new Dictionary<string, TwitchChannel>();
+
+            foreach (var channelId in channelIds)
+            {
+                TwitchChannel twitchChannel;
+                try
+                {
+                    var wc = new WebClient();
+                    wc.Headers.Add("Accept: application/vnd.twitchtv.v5+json");
+                    wc.Headers.Add("Client-ID: 0h7frpcjrc6jdfkrdigesalt76fp9y");
+                    wc.Encoding = Encoding.UTF8;
+
+                    var responeJson = wc.DownloadString($"https://api.twitch.tv/kraken/channels/{channelId}");
+                    twitchChannel = JsonConvert.DeserializeObject<TwitchChannel>(responeJson);
+                    Console.WriteLine(twitchChannel.name);
+                }
+                catch (Exception)
+                {
+                    throw new Exception("Could not connect to twitch api, or bad response.");
+                }
+
+                if (!channels.ContainsKey(twitchChannel.name))
+                {
+                    channels.Add(twitchChannel.name, twitchChannel);
+                }
+            }
+
+            return channels;
+        }
+
         public static string GetSimpleChannelInformation(string id)
         {
             return GetSimpleChannelInformation(new List<string> { id }).FirstOrDefault().Value;
@@ -113,7 +150,7 @@ namespace Twitch___AdiIRC.TwitchApi
             return simpleChannelInformation;
         }
 
-        public static int GetFollowLong(string channelName, string userName)
+        private static DateTime? GetFollowDate(string channelName, string userName)
         {
             try
             {
@@ -136,10 +173,7 @@ namespace Twitch___AdiIRC.TwitchApi
                 var dataResponse = wc.DownloadString(url);
                 dynamic result = JsonConvert.DeserializeObject(dataResponse);
 
-                DateTime time = result.created_at;
-                var now = DateTime.Now;
-
-                return now.Subtract(time).Days;
+                return result.created_at;
             }
             catch (WebException ex)
             {
@@ -147,7 +181,7 @@ namespace Twitch___AdiIRC.TwitchApi
                 if (errorResponse.StatusCode == HttpStatusCode.NotFound)
                 {
                     //Not Following
-                    return -1;
+                    return null;
                 }
                 File.AppendAllText(logPath, $"GetFollowLong({channelName},{userName})" + "\r\n");
                 File.AppendAllText(logPath, FlattenException(ex) + "\r\n");
@@ -164,15 +198,25 @@ namespace Twitch___AdiIRC.TwitchApi
                         }
                     }
 
-
                     File.AppendAllText(logPath, "Response: " + responseText + "\r\n");
                 }
                 catch
                 {
 
                 }
+                return null;
+            }
+        }
+
+        public static int GetFollowLong(string channelName, string userName)
+        {
+            var now = DateTime.Now;
+            var subtract = GetFollowDate(channelName, userName);
+            if(!subtract.HasValue)
+            {
                 return -1;
             }
+            return now.Subtract( subtract.Value ).Days;
         }
         public static string FlattenException(Exception exception)
         {
