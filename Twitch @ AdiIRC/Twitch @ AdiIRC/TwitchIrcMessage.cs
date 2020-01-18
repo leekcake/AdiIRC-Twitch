@@ -64,12 +64,11 @@ namespace Twitch___AdiIRC
         public string Message;
         public string Channel;
         public string UserName;
-        private string userDisplayName;
+        public string userDisplayName;
         public string UserDisplayName {
             get {
                 StringBuilder result = new StringBuilder();
-                if (userDisplayName != null) result.Append(userDisplayName + "(" + UserName + ")");
-                else result.Append(UserName);
+                if (userDisplayName != null) result.Append(userDisplayName);
 
                 if( DisplayFollowLong)
                 {
@@ -77,6 +76,11 @@ namespace Twitch___AdiIRC
                     var channelName = Channel.Substring(1);
                     if (channelName != UserName)
                     {
+                        if(UserName == "bbangddeock" || UserName == "leekcake_bot"
+                            || UserName == "nightbot" || UserName == "ssakdook")
+                        {
+                            return $"{userDisplayName}#Bot";
+                        }
                         var follow = GetFollowData(channelName, UserName);
                         follow.NewEncount();
                         result.Append("#");

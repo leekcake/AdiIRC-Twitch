@@ -183,7 +183,7 @@ namespace Twitch___AdiIRC
                 if (twitchMessage.NeedtoEditMessage)
                 {           
                     var newName = twitchMessage.BadgeList + twitchMessage.UserDisplayName;
-                    argument.Data = rawMessage.Replace($":{twitchMessage.UserName}!", $":{newName}!");
+                    argument.Data = rawMessage.Replace(twitchMessage.Message, $"{newName}: {twitchMessage.Message}");
                 }
             }
 
