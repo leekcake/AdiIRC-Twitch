@@ -103,7 +103,7 @@ namespace Twitch___AdiIRC
             }
         }
 
-        private static readonly string _emoteRegex = @"((\d+):(\d+)-(\d+))";
+        private static readonly string _emoteRegex = @"((\w+):(\d+)-(\d+))";
         private static readonly string _messageRegex = @"@(.+?) :((.+)!.+?) PRIVMSG (#.+?) :(.+)";        
 
         public TwitchIrcMessage(ChannelNormalMessageArgs argument)
