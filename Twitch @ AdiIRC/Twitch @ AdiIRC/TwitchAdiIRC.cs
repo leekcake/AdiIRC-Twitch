@@ -12,6 +12,7 @@ using AdiIRCAPIv2.Arguments.Connection;
 using AdiIRCAPIv2.Arguments.WindowInteraction;
 using AdiIRCAPIv2.Enumerators;
 using AdiIRCAPIv2.Interfaces;
+using Twitch___AdiIRC.Forms;
 
 namespace Twitch___AdiIRC
 {
@@ -290,7 +291,25 @@ namespace Twitch___AdiIRC
              
                 menuItems.Add(new ToolStripSeparator());
                 menuItems.Add(toolStripMenuItem);
-            }            
+            }
+            else if((IsTwitchServer(argument.Window.Server) && argument.MenuType == MenuType.ChannelLink))
+            {
+                var menuItems = argument.MenuItems;
+
+                if (menuItems == null)
+                {
+                    return;
+                }
+
+                var toolStripMenuItem = new ToolStripMenuItem("Twitch@User Detail");
+                toolStripMenuItem.Click += delegate {
+                    var form = new TwitchUserDetailForm(argument.Window.Name, argument.Text, argument.Window.Server);
+                    form.Show();
+                };
+
+                menuItems.Add(new ToolStripSeparator());
+                menuItems.Add(toolStripMenuItem);
+            }
         }
 
         private void OnCommand(RegisteredCommandArgs argument)
