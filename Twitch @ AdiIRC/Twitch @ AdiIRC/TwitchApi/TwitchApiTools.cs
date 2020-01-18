@@ -4,11 +4,27 @@ using Newtonsoft.Json;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Globalization;
+using System.IO;
 
 namespace Twitch___AdiIRC.TwitchApi
 {
-    class TwitchApiTools
+    public class TwitchApiTools
     {
+        public static string logPath;
+
+        static TwitchApiTools()
+        {
+            try
+            {
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            }
+            catch
+            {
+
+            }
+        }
+
         public static string GetSimpleChannelInformationByName(string userName)
         {
             var id = GetUserId(userName);
@@ -95,6 +111,76 @@ namespace Twitch___AdiIRC.TwitchApi
             }
 
             return simpleChannelInformation;
+        }
+
+        public static int GetFollowLong(string channelName, string userName)
+        {
+            try
+            {
+                var wc = new WebClient();
+                wc.Headers.Add("Accept: application/vnd.twitchtv.v5+json");
+                wc.Headers.Add("Client-ID: 5z7316926zi0porkdw7b38ubz47a0e");
+                wc.Encoding = Encoding.UTF8;
+
+                var url = $"https://api.twitch.tv/kraken/users?login={channelName},{userName}";
+                var ids = wc.DownloadString(url);
+                dynamic idsJson = JsonConvert.DeserializeObject(ids);
+                var channelId = idsJson.users[0]._id.ToString();
+                var userId = idsJson.users[1]._id.ToString();
+
+                url = $"https://api.twitch.tv/kraken/users/{userId}/follows/channels/{channelId}";
+                wc = new WebClient();
+                wc.Headers.Add("Accept: application/vnd.twitchtv.v5+json");
+                wc.Headers.Add("Client-ID: 5z7316926zi0porkdw7b38ubz47a0e");
+                wc.Encoding = Encoding.UTF8;
+                var dataResponse = wc.DownloadString(url);
+                dynamic result = JsonConvert.DeserializeObject(dataResponse);
+
+                DateTime time = result.created_at;
+                var now = DateTime.Now;
+
+                return now.Subtract(time).Days;
+            }
+            catch (WebException ex)
+            {
+                File.AppendAllText(logPath, $"GetFollowLong({channelName},{userName})" + "\r\n");
+                File.AppendAllText(logPath, FlattenException(ex) + "\r\n");
+                try
+                {
+                    var responseStream = ex.Response?.GetResponseStream();
+                    string responseText = "";
+
+                    if (responseStream != null)
+                    {
+                        using (var reader = new StreamReader(responseStream))
+                        {
+                            responseText = reader.ReadToEnd();
+                        }
+                    }
+
+
+                    File.AppendAllText(logPath, "Response: " + responseText + "\r\n");
+                }
+                catch
+                {
+
+                }
+                return -1;
+            }
+        }
+        public static string FlattenException(Exception exception)
+        {
+            var stringBuilder = new StringBuilder();
+
+            while (exception != null)
+            {
+                stringBuilder.AppendLine(exception.Message);
+                stringBuilder.AppendLine(exception.StackTrace);
+
+                exception = exception.InnerException;
+            }
+
+            return stringBuilder.ToString();
         }
     }
 }

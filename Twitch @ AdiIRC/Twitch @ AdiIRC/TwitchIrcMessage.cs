@@ -1,20 +1,90 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Text.RegularExpressions;
 using AdiIRCAPIv2.Arguments.ChannelMessages;
+using Twitch___AdiIRC.TwitchApi;
 
 namespace Twitch___AdiIRC
 {
     public class TwitchIrcMessage
     {
+        public class FollowCache
+        {
+            public int FollowDay {
+                get; private set;
+            }
+            public int Encounter {
+                get; private set;
+            } = 0;
+
+            public FollowCache(int day)
+            {
+                FollowDay = day;
+            } 
+
+            public void NewEncount()
+            {
+                Encounter++;
+            }
+            public string Display()
+            {
+                if(Encounter < 10 && FollowDay < 7)
+                {
+                    if (FollowDay == -1) return "#XX";
+                    return "#" + FollowDay;
+                }
+                else
+                {
+                    if (FollowDay == -1) return "XX";
+                    return FollowDay + "";
+                }
+            }
+        }
+
+        private static Dictionary<string, Dictionary<string, FollowCache>> FollowData = new Dictionary<string, Dictionary<string, FollowCache>>();
+        public static FollowCache GetFollowData(string channel, string id)
+        {
+            if (!FollowData.ContainsKey(channel))
+            {
+                FollowData[channel] = new Dictionary<string, FollowCache>();
+            }
+            var dict = FollowData[channel];
+
+            if(dict.ContainsKey(id))
+            {
+                return dict[id];
+            }
+
+            var follow = new FollowCache(TwitchApiTools.GetFollowLong(channel, id));
+            dict[id] = follow;
+            return follow;
+        }
+
         public string Message;
         public string Channel;
         public string UserName;
         private string userDisplayName;
         public string UserDisplayName {
             get {
-                if (userDisplayName != null) return userDisplayName + "(" + UserName + ")";
-                return UserName;
+                StringBuilder result = new StringBuilder();
+                if (userDisplayName != null) result.Append(userDisplayName + "(" + UserName + ")");
+                else result.Append(UserName);
+
+                if( DisplayFollowLong)
+                {
+                    //#e_yeon -> e_yeon
+                    var channelName = Channel.Substring(1);
+                    if (channelName != UserName)
+                    {
+                        var follow = GetFollowData(channelName, UserName);
+                        follow.NewEncount();
+                        result.Append("#");
+                        result.Append(follow.Display());
+                    }
+                }
+
+                return result.ToString();
             }
         }
 
@@ -25,9 +95,11 @@ namespace Twitch___AdiIRC
         public Dictionary<string, string> Tags;
         public List<TwitchEmote> Emotes;
 
+        public bool DisplayFollowLong;
+
         public bool NeedtoEditMessage {
             get {
-                return HasEmotes || userDisplayName != null;
+                return DisplayFollowLong || HasEmotes || userDisplayName != null;
             }
         }
 
@@ -36,6 +108,7 @@ namespace Twitch___AdiIRC
 
         public TwitchIrcMessage(ChannelNormalMessageArgs argument)
         {
+            Channel = argument.Channel.Name;
             //Assign information we care about to fields.
             Message = argument.Message;
             Tags = (Dictionary<string,string>) argument.MessageTags;

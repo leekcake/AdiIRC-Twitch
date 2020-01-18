@@ -18,6 +18,7 @@ namespace Twitch___AdiIRC
             settingsBox.Items.Add("Show (Re)Subscription Notification",_settings.ShowSubs);
             settingsBox.Items.Add("Show Badges", _settings.ShowBadges);
             settingsBox.Items.Add("Tab Inserts @ Before Names", _settings.AutoComplete);
+            settingsBox.Items.Add("Display How long follow of user", _settings.ShowFollowLong);
         }
 
         private void UpdateSettingsFromSettingsBox()
@@ -47,6 +48,10 @@ namespace Twitch___AdiIRC
                     case "Tab Inserts @ Before Names":
                         _settings.AutoComplete = settingsBox.GetItemChecked(i);
                         break;
+
+                    case "Display How long follow of user":
+                        _settings.ShowFollowLong = settingsBox.GetItemChecked(i);
+                        break;
                 }
 
             }
@@ -57,6 +62,11 @@ namespace Twitch___AdiIRC
             UpdateSettingsFromSettingsBox();
             _settings.Save();
             Hide();
+        }
+
+        private void SettingsForm_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

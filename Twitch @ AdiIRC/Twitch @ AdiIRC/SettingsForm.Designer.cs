@@ -34,9 +34,9 @@
             // 
             // CloseButton
             // 
-            this.CloseButton.Location = new System.Drawing.Point(197, 226);
+            this.CloseButton.Location = new System.Drawing.Point(230, 209);
             this.CloseButton.Name = "CloseButton";
-            this.CloseButton.Size = new System.Drawing.Size(75, 23);
+            this.CloseButton.Size = new System.Drawing.Size(87, 21);
             this.CloseButton.TabIndex = 2;
             this.CloseButton.Text = "Close";
             this.CloseButton.UseVisualStyleBackColor = true;
@@ -46,26 +46,27 @@
             // 
             this.settingsBox.CheckOnClick = true;
             this.settingsBox.FormattingEnabled = true;
-            this.settingsBox.Location = new System.Drawing.Point(12, 12);
+            this.settingsBox.Location = new System.Drawing.Point(14, 11);
             this.settingsBox.Name = "settingsBox";
-            this.settingsBox.Size = new System.Drawing.Size(260, 199);
+            this.settingsBox.Size = new System.Drawing.Size(303, 180);
             this.settingsBox.TabIndex = 3;
             // 
             // SettingsForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 261);
+            this.ClientSize = new System.Drawing.Size(331, 241);
             this.ControlBox = false;
             this.Controls.Add(this.settingsBox);
             this.Controls.Add(this.CloseButton);
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(300, 300);
+            this.MaximumSize = new System.Drawing.Size(347, 280);
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(300, 300);
+            this.MinimumSize = new System.Drawing.Size(347, 280);
             this.Name = "SettingsForm";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Twitch @ AdiIRC Settings";
+            this.Load += new System.EventHandler(this.SettingsForm_Load);
             this.ResumeLayout(false);
 
         }

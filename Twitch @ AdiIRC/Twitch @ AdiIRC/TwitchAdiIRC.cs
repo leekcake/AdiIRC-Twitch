@@ -41,6 +41,7 @@ namespace Twitch___AdiIRC
             //Fetch the Config folder and attach the correct path to 
             //Twitch @AdiIRC's config file
             var settingsPath = _host.ConfigFolder + @"\Plugins\TwitchConfig\Config.json";
+            TwitchApiTools.logPath = _host.ConfigFolder + @"\Plugins\error.log";
 
             //Either Load an existing config file or create a new one with default values.
             if (File.Exists(settingsPath))
@@ -169,13 +170,14 @@ namespace Twitch___AdiIRC
             if (rawMessage.Contains("PRIVMSG"))
             {                                
                 //Check if we should show badges before doing work.
-                if (!_settings.ShowBadges)
+                if (!_settings.ShowBadges && !_settings.ShowFollowLong)
                 {
                     return;
                 }
                 
                 //Parse message into a TwitchMessage
                 var twitchMessage = new TwitchIrcMessage(rawMessage);
+                twitchMessage.DisplayFollowLong = _settings.ShowFollowLong;
 
                 //Check if there are badges or user has custom displayName, if so, insert them into event.
                 if (twitchMessage.NeedtoEditMessage)
