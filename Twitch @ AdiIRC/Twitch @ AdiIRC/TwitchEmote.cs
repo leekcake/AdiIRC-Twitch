@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 
 namespace Twitch___AdiIRC
@@ -17,8 +18,9 @@ namespace Twitch___AdiIRC
                 var wc = new WebClient();
                 wc.DownloadFile(URL, filepath);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                File.AppendAllText(TwitchApi.TwitchApiTools.logPath, TwitchApi.TwitchApiTools.FlattenException(ex));
                 return false;
             }
 
