@@ -56,6 +56,9 @@
       <DependentUpon>TwitchUserDetailForm.cs</DependentUpon>
     </Compile>
     <Compile Include="IRCUtils.cs" />
+    <Compile Include="Menu\ChannelLinkMenuHandler.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="SettingsForm.cs">
       <SubType>Form</SubType>

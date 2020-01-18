@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Twitch___AdiIRC.TwitchApi;
+using static Twitch___AdiIRC.IRCUtils;
 
 namespace Twitch___AdiIRC.Forms
 {
@@ -17,15 +18,6 @@ namespace Twitch___AdiIRC.Forms
         private string channelName;
         private string targetName;
 
-        private string cutSharp(string value)
-        {
-            if(value.StartsWith("#"))
-            {
-                return value.Substring(1);
-            }
-            return value;                
-        }
-
         private IServer caller;
         private TwitchChannel channel, target;
         
@@ -33,18 +25,19 @@ namespace Twitch___AdiIRC.Forms
         {
             InitializeComponent();
             this.caller = caller;
-            this.channelName = cutSharp(channelName);
-            this.targetName = cutSharp(targetName);
+            this.channelName = CutSharp(channelName);
+            this.targetName = CutSharp(targetName);
         }
 
         private void TwitchUserDetailForm_Load(object sender, EventArgs e)
         {
-            var datas = TwitchApiTools.GetTwitchChannel(new List<string>() { channelName, targetName});
+            var ids = TwitchApiTools.GetUserIds(new List<string>() { channelName, targetName });
+            var datas = TwitchApiTools.GetTwitchChannel(ids.Values);
             channel = datas[channelName];
             target = datas[targetName];
 
-            Text = targetName + " #" + channelName;
-            UserNameLabel.Text = $"유저 아이디: {target.display_name}(@{targetName})";
+            Text = target.SimpleDescription + " @ " + channel.SimpleDescription;
+            UserNameLabel.Text = $"대상 유저: {target.SimpleDescription}";
         }
     }
 }

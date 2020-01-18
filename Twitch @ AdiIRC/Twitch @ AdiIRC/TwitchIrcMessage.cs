@@ -19,6 +19,12 @@ namespace Twitch___AdiIRC
                 get; private set;
             } = 0;
 
+            public bool IsWarningUser {
+                get {
+                    return Encounter < 10 && FollowDay < 7;
+                }
+            }
+
             public FollowCache(int day)
             {
                 FollowDay = day;
@@ -28,19 +34,11 @@ namespace Twitch___AdiIRC
             {
                 Encounter++;
             }
+
             public string Display()
             {
-                if(Encounter < 10 && FollowDay < 7)
-                {
-                    //Need to add Zero width joiner(‍) for easy highlight
-                    if (FollowDay == -1) return "‍X";
-                    return "‍" + FollowDay + "일";
-                }
-                else
-                {
-                    if (FollowDay == -1) return "X";
-                    return FollowDay + "일";
-                }
+                if (FollowDay == -1) return "X";
+                return FollowDay + "일";
             }
         }
 
@@ -93,6 +91,10 @@ namespace Twitch___AdiIRC
                         }
                         var follow = GetFollowData(channelName, UserName);
                         follow.NewEncount();
+                        if (follow.IsWarningUser)
+                        {
+                            result.Append("|");
+                        }
                         result.Append("(");
                         result.Append(follow.Display());
                         result.Append(")");

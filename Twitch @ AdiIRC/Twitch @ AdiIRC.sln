@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twitch @ AdiIRC", "Twitch @
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APITester", "APITester\APITester.csproj", "{8BB9079A-081D-49C8-B244-D9537CCA5636}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Standalone", "Standalone\Standalone.csproj", "{95359224-52DD-48A9-924A-0C52B66EEFCC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{8BB9079A-081D-49C8-B244-D9537CCA5636}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8BB9079A-081D-49C8-B244-D9537CCA5636}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8BB9079A-081D-49C8-B244-D9537CCA5636}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95359224-52DD-48A9-924A-0C52B66EEFCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95359224-52DD-48A9-924A-0C52B66EEFCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95359224-52DD-48A9-924A-0C52B66EEFCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95359224-52DD-48A9-924A-0C52B66EEFCC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

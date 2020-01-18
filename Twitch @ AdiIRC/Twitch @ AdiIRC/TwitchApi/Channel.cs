@@ -20,5 +20,11 @@
         public string url;
         public int views;
         public int followers;
+
+        public string SimpleDescription {
+            get {
+                return display_name + "(@" + name + ")";
+            }
+        }
     }
 }

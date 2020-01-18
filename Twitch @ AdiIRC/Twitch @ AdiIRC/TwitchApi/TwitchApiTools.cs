@@ -101,7 +101,7 @@ namespace Twitch___AdiIRC.TwitchApi
                 }
                 catch (Exception)
                 {
-                    throw new Exception("Could not connect to twitch api, or bad response.");
+                    throw new Exception("Could not connect to twitch api, or bad response. Tried for: " + channelId);
                 }
 
                 if (!channels.ContainsKey(twitchChannel.name))
