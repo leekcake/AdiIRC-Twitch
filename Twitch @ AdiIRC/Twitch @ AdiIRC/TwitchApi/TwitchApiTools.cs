@@ -143,6 +143,12 @@ namespace Twitch___AdiIRC.TwitchApi
             }
             catch (WebException ex)
             {
+                HttpWebResponse errorResponse = ex.Response as HttpWebResponse;
+                if (errorResponse.StatusCode == HttpStatusCode.NotFound)
+                {
+                    //Not Following
+                    return -1;
+                }
                 File.AppendAllText(logPath, $"GetFollowLong({channelName},{userName})" + "\r\n");
                 File.AppendAllText(logPath, FlattenException(ex) + "\r\n");
                 try
